@@ -10,4 +10,4 @@ Challenges in document summarization :
 Solutions:
 Pattern 1 - Using a simple chunk based mechanism where summary of summaries is generated.
 Code - document-summarization/summarizer.py at main · komalg1/document-summarization (github.com)
-![image](https://github.com/komalg1/document-summarization/assets/29505310/ca3dda6e-a1c8-49c0-9cb7-4b1db4c8ee17)
+(https://github.com/komalg1/document-summarization/assets/29505310/ca3dda6e-a1c8-49c0-9cb7-4b1db4c8ee17)
