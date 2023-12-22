@@ -1,0 +1,5 @@
+azure-identity==1.15.0
+azure-core==1.29.5
+langchain==0.0.329
+tiktoken==0.2.0
+openai==1.1.2
