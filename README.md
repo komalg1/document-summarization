@@ -8,7 +8,7 @@ Document summarization with Azure Open AI enables to distil concise, insightful 
 	3. Indexing the document summary for each chunk will lead to redundant information in the chunks <br>
 
 
-Solutions: <br><br>
+**Solutions**: <br><br>
 **Pattern 1** - Using a simple chunk based mechanism where summary of summaries is generated.
 Code - document-summarization/summarizer.py at main · komalg1/document-summarization (github.com)
 (https://github.com/komalg1/document-summarization/assets/29505310/ca3dda6e-a1c8-49c0-9cb7-4b1db4c8ee17)
