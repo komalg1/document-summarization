@@ -12,7 +12,7 @@ from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 class Summarizer:
         def __init__(self):
         #self.api_version = '2023-08-01-preview'
-            self.openai_deploymentname = 'LearningAzureAI'
+            self.openai_deploymentname = 'DEPLOYMENT_NAME'
             self.azure_endpoint = f'https://{self.openai_deploymentname}.openai.azure.com/openai'
             self.credential = DefaultAzureCredential()
             
