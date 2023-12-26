@@ -21,4 +21,5 @@ Code -
 **Pattern3** - Using Map Reduce chain. In this approach first each document is mapped to an individual summary using an LLMChain and then it uses a ReduceDocumentChain to combine the chunk summaries to a common summary. In this approach we can reuse the chain to combine and then collapse the chain. In case the max_tokens exceeds a given number then it recursively passes the chunks in batches of tokens less than the `token-max` to StuffDocumentsChain to create chunk summaries. In the end the batched summaries are then passed to StuffDocumentChain to create one cumulative summary.
 Code - 
 
-**Pattern 4** - 
+**Pattern 4** - Refine. In this approach an intial prompt on the first chunk of data is sent and generate output. For the nect document, the previous output along with the document is passed and LLM is asked to refine the ouput based on the current document. This approach prevents loss of data that may happen in Map Reduce approach. Secondly, the calls are sequential and not independent.
+Code - 

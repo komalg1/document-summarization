@@ -1,7 +1,6 @@
 import os
 from azure.identity import DefaultAzureCredential
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.prompts import PromptTemplate
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import AzureChatOpenAI
 from langchain.document_loaders import TextLoader
