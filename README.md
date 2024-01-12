@@ -31,10 +31,6 @@ The below solution patterns are using RBAC access for accessing Azure Open AI re
 If you don't have the permission rights for assigning the RBAC access, replace the value for `os.environ["OPENAI_API_KEY"]` with the `Azure Open AI API Key`, which can be extracted from Azure portal for the Azure OpenAI resource in the `Keys & Endpoints` section and also replace the value of `os.environ["OPENAI_API_TYPE"]` and `openai_api_type` to `azure` instead of `azure_ad`.
 
 ``` python
-from openai import AzureOpenAI
-from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-from azure.core.credentials import AzureKeyCredential
-
 def __init__(self):
     self.openai_deploymentname = 'DeploymentName'
     self.azure_endpoint = f'https://{self.openai_deploymentname}.openai.azure.com/openai'
@@ -57,6 +53,12 @@ Note - The patterns 2,3,4 below use the text for the book 'The Adventures of
 
 ### Pattern 1 - Simple Chunk based mechanism
 Using a simple chunk based mechanism where summary of summaries is generated. Using this approach we are chunking only based on document size otherwise the whole text is being sent in a single prompt.
+
+***Import libraries***
+```python
+from openai import AzureOpenAI
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+```
 
 The below code is splitting the text first based on the tokens and then calls the `_summarize_text_chunk` method which calls Azure OpenAI API
 
@@ -105,6 +107,17 @@ A full code example of this pattern can be found [here.](https://github.com/koma
 ### Pattern 2 - Using MapReduce 
 This pattern is also chunk based mechanism but the chunk processing is done in parallel instead of sequential using langchain MapReduce. Using `load_summarize_chain` method from langchain framework the document can be summarized.
 
+***Import libraries***
+```python
+import os
+from azure.identity import DefaultAzureCredential
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains.summarize import load_summarize_chain
+from langchain.chat_models import AzureChatOpenAI
+from langchain.document_loaders import TextLoader
+import openai
+import textwrap
+```
 Below code snippet loads the document & returns in the `Document` format which is required by langchain map reduce method.
 
 ``` python
@@ -144,6 +157,20 @@ A full code example of this pattern can be found [here.](https://github.com/koma
 
 ### Pattern 3 - Map Reduce chain <br>
 In this approach first each document is mapped to an individual summary using an LLMChain and then it uses a ReduceDocumentChain to combine the chunk summaries to a common summary. Here we can reuse the chain to combine and then collapse the chain. In case the max_tokens exceeds a given number then it recursively passes the chunks in batches of tokens less than the token-max to StuffDocumentsChain to create chunk summaries. In the end, the batched summaries are then passed to StuffDocumentChain to create one cumulative summary.
+
+***Import libraries***
+```python
+from langchain.chains import MapReduceDocumentsChain, ReduceDocumentsChain
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.chat_models import AzureChatOpenAI
+from langchain.prompts import PromptTemplate
+from langchain.chains.llm import LLMChain
+import os
+from langchain.document_loaders import TextLoader
+import openai
+from azure.identity import DefaultAzureCredential
+from langchain.chains.combine_documents.stuff import StuffDocumentsChain
+```
 
 Following code snippet demonstrates the map reduce chain.
 
@@ -215,6 +242,19 @@ A full code example of this pattern can be found [here.](https://github.com/koma
 
 ### Pattern 4 - Refine <br>
 In this approach an initial prompt on the first chunk of data is sent to generate the output. For the next document, the previous output along with the document is passed in and LLM is asked to refine the output based on the current document. This approach prevents loss of data that may happen in the Map Reduce approach. Also, the calls are sequential and not independent.
+
+***Import libraries***
+```python
+import os
+from azure.identity import DefaultAzureCredential
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.chains.summarize import load_summarize_chain
+from langchain.chat_models import AzureChatOpenAI
+from langchain.document_loaders import TextLoader
+from langchain.prompts import PromptTemplate
+import openai
+import textwrap
+```
 
 ``` python
 def summary_refine(self):
