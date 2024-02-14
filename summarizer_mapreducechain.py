@@ -28,7 +28,7 @@ class Summarizer:
 
         def load_document(self):
             cwd = os.getcwd()
-            loader = TextLoader(f'{cwd}/the-adventures-of-huckleberry-finn.txt')
+            loader = TextLoader(f'{cwd}/text_document.txt')
             documents = loader.load()
             text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
             docs = text_splitter.split_documents(documents)
