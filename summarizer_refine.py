@@ -12,26 +12,26 @@ class Summarizer:
     def __init__(self):
         #self.api_version = '2023-08-01-preview'
         self.openai_deploymentname = 'DEPLOYMENT_NAME'
-        self.azure_endpoint = f'https://{self.openai_deploymentname}.openai.azure.com/openai'
+        self.azure_endpoint = f'https://{self.openai_deploymentname}.openai.azure.com/'
         self.credential = DefaultAzureCredential()
         
-        os.environ["OPENAI_API_TYPE"] = "azure"
-        os.environ["OPENAI_API_VERSION"] = "2023-08-01-preview"
+        os.environ["OPENAI_API_TYPE"] = "azure_ad"
+        os.environ["OPENAI_API_VERSION"] = "2023-07-01-preview"
         os.environ["OPENAI_API_BASE"] = self.azure_endpoint 
         os.environ["OPENAI_API_KEY"] = self.credential.get_token("https://cognitiveservices.azure.com/.default").token
 
-        openai.api_type = "azure"
+        openai.api_type = "azure_ad"
         openai.api_base = self.azure_endpoint 
-        openai.api_version = "2023-08-01-preview"
+        openai.api_version = "2023-07-01-preview"
         openai.api_key = self.credential.get_token("https://cognitiveservices.azure.com/.default").token
             
     def load_document(self):
         cwd = os.getcwd()
-        loader = TextLoader(f'{cwd}/the-adventures-of-huckleberry-finn.txt')
+        loader = TextLoader(f'{cwd}/text_document.txt')
         documents = loader.load()
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         docs = text_splitter.split_documents(documents)
-        return docs[:6]
+        return docs
     
     def summary_refine(self):
         docs = self.load_document()
@@ -61,10 +61,10 @@ class Summarizer:
             template=refine_template,
         )
         chain = load_summarize_chain(AzureChatOpenAI(openai_api_base=self.azure_endpoint,
-                openai_api_version="2023-08-01-preview",
+                openai_api_version="2023-07-01-preview",
                 deployment_name='gpt-35-turbo',
                 openai_api_key=self.credential.get_token("https://cognitiveservices.azure.com/.default").token,
-                openai_api_type = "azure"), 
+                openai_api_type = "azure_ad"), 
                                     chain_type="refine", 
                                     return_intermediate_steps=True, 
                                     question_prompt=PROMPT, 
